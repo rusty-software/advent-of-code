@@ -202,11 +202,29 @@ insert into aoc_day01 values
 ,(1864)
 ,(1702);
 
-select n1.amount, n2.amount, n1.amount * n2.amount as product from aoc_day01 n1 cross join aoc_day01 n2 where n1.amount + n2.amount = 2020 limit 1; 
-
+/* part 1 */
+select n1.amount, n2.amount, n1.amount * n2.amount as product 
+from aoc_day01 n1 
+cross join aoc_day01 n2 
+where n1.amount + n2.amount = 2020 
+limit 1; 
 /*
  amount | amount | product 
 --------+--------+---------
     251 |   1769 |  444019
+(1 row)
+*/
+
+/* part 2 */
+select n1.amount, n2.amount, n3.amount, n1.amount * n2.amount * n3.amount as product 
+from aoc_day01 n1 
+cross join aoc_day01 n2 
+cross join aoc_day01 n3
+where n1.amount + n2.amount + n3.amount = 2020 
+limit 1; 
+/* 
+ amount | amount | amount | product  
+--------+--------+--------+----------
+   1589 |    383 |     48 | 29212176
 (1 row)
 */
