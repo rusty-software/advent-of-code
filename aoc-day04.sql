@@ -1202,6 +1202,7 @@ select string_to_array(line, ' '), case when array_length(string_to_array(line, 
 from passport_combined 
 where array_length(string_to_array(line, ' '), 1) >= 7;
 
+/* part 1 */
 with checked_data as (
     select string_to_array(line, ' '), case when array_length(string_to_array(line, ' '), 1) = 7 and line like '%cid:%' then false else true end as is_valid 
     from passport_combined 
@@ -1209,3 +1210,44 @@ with checked_data as (
 select count(*)
 from checked_data
 where is_valid = true;
+/*
+ count 
+-------
+   264
+(1 row)
+*/
+
+/* part 2, ouchie */
+with checked_data as (
+    select line
+    from passport_combined
+    where array_length(string_to_array(line, ' '), 1) >= 7
+    and not (array_length(string_to_array(line, ' '), 1) = 7 and line like '%cid:%'))
+select line
+, split_part(split_part(substring(line, strpos(line, 'byr:')), ' ', 1), ':', 2) as byr_val
+, split_part(split_part(substring(line, strpos(line, 'iyr:')), ' ', 1), ':', 2) as iyr_val
+, split_part(split_part(substring(line, strpos(line, 'eyr:')), ' ', 1), ':', 2) as eyr_val
+, split_part(split_part(substring(line, strpos(line, 'hgt:')), ' ', 1), ':', 2) as hgt_val
+, right(split_part(split_part(substring(line, strpos(line, 'hgt:')), ' ', 1), ':', 2), 2) as hgt_scale_val
+, left(split_part(split_part(substring(line, strpos(line, 'hgt:')), ' ', 1), ':', 2), -2) as hgt_measure_val
+, split_part(split_part(substring(line, strpos(line, 'hcl:')), ' ', 1), ':', 2) as hcl_val
+, split_part(split_part(substring(line, strpos(line, 'ecl:')), ' ', 1), ':', 2) as ecl_val
+, split_part(split_part(substring(line, strpos(line, 'pid:')), ' ', 1), ':', 2) as pid_val
+from checked_data
+where 1 = 1 
+and cast(split_part(split_part(substring(line, strpos(line, 'byr:')), ' ', 1), ':', 2) as int) between 1920 and 2002
+and cast(split_part(split_part(substring(line, strpos(line, 'iyr:')), ' ', 1), ':', 2) as int) between 2010 and 2020
+and cast(split_part(split_part(substring(line, strpos(line, 'eyr:')), ' ', 1), ':', 2) as int) between 2020 and 2030
+and split_part(split_part(substring(line, strpos(line, 'ecl:')), ' ', 1), ':', 2) in ('amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth') 
+and regexp_match(split_part(split_part(substring(line, strpos(line, 'hcl:')), ' ', 1), ':', 2), '^#([A-Fa-f0-9]{6})$') is not null
+and (length(split_part(split_part(substring(line, strpos(line, 'pid:')), ' ', 1), ':', 2)) = 9
+    and split_part(split_part(substring(line, strpos(line, 'pid:')), ' ', 1), ':', 2) ~ '^[0-9\.]+$')
+and ((right(split_part(split_part(substring(line, strpos(line, 'hgt:')), ' ', 1), ':', 2), 2) = 'cm'
+        and cast(left(split_part(split_part(substring(line, strpos(line, 'hgt:')), ' ', 1), ':', 2), -2) as int) between 150 and 193)
+    or (right(split_part(split_part(substring(line, strpos(line, 'hgt:')), ' ', 1), ':', 2), 2) = 'in'
+        and cast(left(split_part(split_part(substring(line, strpos(line, 'hgt:')), ' ', 1), ':', 2), -2) as int) between 59 and 76)
+    );
+/*
+224
+*/
+
