@@ -374,7 +374,7 @@ begin
             y_idx := y_idx + 1;
             continue;
         end if;
-        if> y_step  1 and mod((y_idx - 1), y_step) <> 0 then
+        if y_step  1 and mod((y_idx - 1), y_step) <> 0 then
             y_idx := y_idx + 1;
             continue;
         end if;
