@@ -2251,8 +2251,7 @@ begin
 end;
 $$
 
-<<<<<<< HEAD
-create or replace function distinct_char_count(group_num int, str varchar(255))
+create or replace function group_char_count(group_num int, str varchar(255))
     returns bigint as
 $$
 declare
@@ -2270,14 +2269,3 @@ having count(*) = group_num
 end;
 $$
 language plpgsql;
-
-select count(*)
-from (select char, count(*)
-from (select unnest(arr_char) as char
-        from (select string_to_array('psyjxulrdtfejeusdrlxyftpufdpjsxrlztyeyeorabxsdnhftujlppedfxtsryujl', null) as arr_char) a
-        ) b
-group by 1
-having count(*) = 5
-) c;
-=======
->>>>>>> afdf09b62d0a547e44cffdccb8e3e9a8de842551
