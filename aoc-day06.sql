@@ -2251,6 +2251,7 @@ begin
 end;
 $$
 
+<<<<<<< HEAD
 create or replace function distinct_char_count(group_num int, str varchar(255))
     returns bigint as
 $$
@@ -2278,3 +2279,5 @@ from (select unnest(arr_char) as char
 group by 1
 having count(*) = 5
 ) c;
+=======
+>>>>>>> afdf09b62d0a547e44cffdccb8e3e9a8de842551
