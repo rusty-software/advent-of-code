@@ -202,13 +202,19 @@ expenses = [
 
 
 def find_pair_summing_to(expected_sum):
+    """
+    This one is a poor performer, but gets the job done.
+    """
     for left in expenses:
         for right in expenses:
             if left + right == expected_sum:
                 return left, right
 
 
-def find_thriple_summing_to(expected_sum):
+def find_triple_summing_to(expected_sum):
+    """
+    Yikes, now we're talking an even faster road to processor ruination.
+    """
     for left in expenses:
         for middle in expenses:
             for right in expenses:
@@ -216,11 +222,60 @@ def find_thriple_summing_to(expected_sum):
                     return left, middle, right
 
 
+def find_pair_improved(expected_sum):
+    """
+    Seems like this algorithm would scale linearly.
+
+    Tanya told me about this one (she's gone through an algorithms course
+    """
+    diffs = {}
+    for expense in expenses:
+        diffs[expected_sum - expense] = expense
+
+    for expense in expenses:
+        if expense in diffs.keys():
+            return expense, diffs[expense]
+
+
+def find_triple_improved(expected_sum):
+    """
+    Sorting and two-pointer technique
+
+    I looked this one up. Seems reasonable that it would be a better performer than the n^3.
+    """
+    # sort the array. ah, mutability
+    expenses.sort()
+
+    upperbound = len(expenses)
+    # fix the first of the triple values and try to find the other two values
+    for i in range(0, upperbound - 2):
+        # start the pointers at opposite eligible ends of the array
+        left = i + 1
+        right = upperbound - 1
+
+        while left < right:
+            current_sum = expenses[i] + expenses[left] + expenses[right]
+            if current_sum == expected_sum:
+                return expenses[i], expenses[left], expenses[right]
+            elif current_sum < expected_sum:
+                # too small: move the left pointer
+                left += 1
+            else:
+                # too large: move the right pointer
+                right -= 1
+
+    return None, None, None
+
+
 def calc():
     [left, right] = find_pair_summing_to(2020)
-    print('{:d} * {:d} == {:d}'.format(left, right, left * right))
-    [left, middle, right] = find_thriple_summing_to(2020)
-    print('{:d} * {:d} * {:d} == {:d}'.format(left, middle, right, left * middle * right))
+    print('find_pair: {:d} * {:d} == {:d}'.format(left, right, left * right))
+    [left, right] = find_pair_improved(2020)
+    print('find_pair_improved: {:d} * {:d} == {:d}'.format(left, right, left * right))
+    [left, middle, right] = find_triple_summing_to(2020)
+    print('find_triple: {:d} * {:d} * {:d} == {:d}'.format(left, middle, right, left * middle * right))
+    [left, middle, right] = find_triple_improved(2020)
+    print('find_triple_improved: {:d} * {:d} * {:d} == {:d}'.format(left, middle, right, left * middle * right))
 
 
 if __name__ == "__main__":
