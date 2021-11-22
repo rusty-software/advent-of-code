@@ -201,16 +201,26 @@ expenses = [
     , 1702]
 
 
-def find_correct_sum(expected_sum):
+def find_pair_summing_to(expected_sum):
     for left in expenses:
         for right in expenses:
             if left + right == expected_sum:
                 return left, right
 
 
+def find_thriple_summing_to(expected_sum):
+    for left in expenses:
+        for middle in expenses:
+            for right in expenses:
+                if left + middle + right == expected_sum:
+                    return left, middle, right
+
+
 def calc():
-    [left, right] = find_correct_sum(2020)
+    [left, right] = find_pair_summing_to(2020)
     print('{:d} * {:d} == {:d}'.format(left, right, left * right))
+    [left, middle, right] = find_thriple_summing_to(2020)
+    print('{:d} * {:d} * {:d} == {:d}'.format(left, middle, right, left * middle * right))
 
 
 if __name__ == "__main__":
