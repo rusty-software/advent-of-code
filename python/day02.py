@@ -1002,7 +1002,7 @@ password_data = [
 ]
 
 
-def calc():
+def part1():
     valid_count = 0
     for pwd in password_data:
         [min_max, letter, password] = pwd.split(' ')
@@ -1015,5 +1015,21 @@ def calc():
     print('Valid password count: {:d}'.format(valid_count))
 
 
+def part2():
+    valid_count = 0
+    for pwd in password_data:
+        [min_max, letter, password] = pwd.split(' ')
+        [min_loc, max_loc] = min_max.split('-')
+        letter = letter[0]
+        min_loc = int(min_loc) - 1
+        max_loc = int(max_loc) - 1
+        if (password[min_loc] == letter or password[max_loc] == letter) \
+                and not (password[min_loc] == letter and password[max_loc] == letter):
+            valid_count += 1
+
+    print('Valid password count: {:d}'.format(valid_count))
+
+
 if __name__ == "__main__":
-    calc()
+    part1()
+    part2()
