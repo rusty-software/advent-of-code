@@ -1,5 +1,5 @@
-file = open('../input/day03.txt', 'r')
-lines = file.readlines()
+with open('../input/day03.txt', 'r') as f:
+    lines = f.readlines()
 
 
 def inc_x(x, step_x, line_len):
@@ -23,7 +23,7 @@ def trees_hit(step_x, step_y):
 
     for line in lines:
         if y == next_y:
-            line = line.replace('\n', '')
+            line = line.split('\n')[0]
             hit_count += 1 if is_tree(x, line) else 0
             x = inc_x(x, step_x, len(line))
             next_y = y + step_y
@@ -54,4 +54,6 @@ def part2():
 
 if __name__ == "__main__":
     part1()
+    # 234
     part2()
+    # 5813773056
