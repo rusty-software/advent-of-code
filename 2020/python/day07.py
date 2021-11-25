@@ -122,6 +122,7 @@ for line in lines:
         each_contain.update(all_bags[mbag])
     all_bags[mbag] = each_contain
 
+
 my_bag = "shiny gold"
 bags_contains = {}
 test_bags = all_bags
@@ -151,4 +152,4 @@ if __name__ == "__main__":
     # 274
     # part2()
     # ?
-    print(f"{my_bag} bag can hold {count_bags('shiny gold')} bags")
+    print(f"{my_bag} bag can hold {count_bags(my_bag)} bags")
