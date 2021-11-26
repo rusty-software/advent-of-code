@@ -30,8 +30,33 @@ def part1():
     return
 
 
+def part2():
+    target = 530627549
+
+    print(f'target: {target}')
+    for idx, num in enumerate(nums):
+        current_sum = 0
+        jdx = idx
+        while current_sum < target:
+            current_sum += nums[jdx]
+            jdx += 1
+
+        if current_sum == target:
+            subrange = nums[idx:jdx]
+            print(f'Range produced target! {subrange}')
+            print(f'min: {min(subrange)}, max: {max(subrange)}')
+            print(f'sum: {min(subrange) + max(subrange)}')
+            return
+        else:
+            print(f'No range from {num} (idx {idx})')
+
+    print('No range produced target!')
+
+    return
+
+
 if __name__ == "__main__":
-    part1()
+    # part1()
     # 530627549
-    # part2()
-    # ?
+    part2()
+    # 77730285
