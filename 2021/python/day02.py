@@ -17,8 +17,25 @@ def part1():
     return
 
 
+def part2():
+    position = [0, 0]
+    aim = 0
+    for instruction in instructions:
+        direction, quantity = instruction.split(' ')
+        if direction == 'forward':
+            position[0] += int(quantity)
+            position[1] += int(quantity) * aim
+        elif direction == 'down':
+            aim += int(quantity)
+        else:
+            aim -= int(quantity)
+
+    print(f'Position[horizontal, depth], aim: {position}, {aim}; product: {position[0] * position[1]}')
+    return
+
+
 if __name__ == "__main__":
-    part1()
-    # 1752
-    # part2()
+    # part1()
+    # 1580000
+    part2()
     # 1781
