@@ -37,8 +37,43 @@ def part1():
     return
 
 
+def bin_nums_with_digit_at_idx(nums, digit, idx):
+    return [bin_num for bin_num in nums if bin_num[idx] == digit]
+
+
+def part2():
+    digits_per_num = len(bin_nums[0])
+
+    oxygen_generator_rating_candidates = bin_nums
+    co2_scrubber_rating_candidates = bin_nums
+    for digit_idx in range(digits_per_num):
+        # oxygen generator rating
+        if len(oxygen_generator_rating_candidates) > 1:
+            zeros = bin_nums_with_digit_at_idx(oxygen_generator_rating_candidates, "0", digit_idx)
+            ones = bin_nums_with_digit_at_idx(oxygen_generator_rating_candidates, "1", digit_idx)
+            if len(zeros) <= len(ones):
+                oxygen_generator_rating_candidates = ones
+            else:
+                oxygen_generator_rating_candidates = zeros
+
+        # co2 scrubber rating
+        if len(co2_scrubber_rating_candidates) > 1:
+            zeros = bin_nums_with_digit_at_idx(co2_scrubber_rating_candidates, "0", digit_idx)
+            ones = bin_nums_with_digit_at_idx(co2_scrubber_rating_candidates, "1", digit_idx)
+            if len(zeros) <= len(ones):
+                co2_scrubber_rating_candidates = zeros
+            else:
+                co2_scrubber_rating_candidates = ones
+
+    oxygen_generator_rating = oxygen_generator_rating_candidates[0]
+    co2_scrubber_rating = co2_scrubber_rating_candidates[0]
+    print(f'oxygen generator rating: {oxygen_generator_rating}; co2 scrubber rating: {co2_scrubber_rating}')
+    print(f'{int(oxygen_generator_rating, 2)} * {int(co2_scrubber_rating, 2)} = {int(oxygen_generator_rating, 2) * int(co2_scrubber_rating, 2)}')
+    return
+
+
 if __name__ == "__main__":
-    part1()
-    #
-    # part2()
-    #
+    # part1()
+    # 1071734
+    part2()
+    # 6124992
