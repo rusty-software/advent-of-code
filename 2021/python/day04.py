@@ -38,15 +38,17 @@ def bingo_check(found_nums):
         covered_rows = [coord for coord in found_nums if coord[0] == idx]
         covered_cols = [coord for coord in found_nums if coord[1] == idx]
         if len(covered_rows) == 5:
-            print(f'bingo in row: {covered_rows}')
             return covered_rows
         if len(covered_cols) == 5:
-            print(f'bingo in col: {covered_cols}')
             return covered_cols
     return False
 
 
 def play(hopper, cards):
+    """
+    Given a list of numbers to play and a list of cards on which to play, play until a winner is found and return the
+    winner dictionary. Return None if no winner is found.
+    """
     marked_nums = dict()
     for num in hopper:
         for card_idx, card in enumerate(cards):
@@ -63,21 +65,37 @@ def play(hopper, cards):
                             if [row_idx, col_idx] not in marked_nums[card_idx]:
                                 total += int(col)
                     return {'card_idx': card_idx,
+                            'card': card,
                             'total': total,
                             'last_num': num,
                             'product': total * int(num)}
+    return None
 
 
 def part1():
     hopper, cards = parse_lines()
     winner = play(hopper, cards)
-    print(f'total: {winner["total"]} * last num: {winner["last_num"]} = {winner["product"]}')
+    print(f'winner: {winner}')
+    return
 
+
+def part2():
+    hopper, cards = parse_lines()
+    last_winner = None
+    while True:
+        winner = play(hopper, cards)
+        if winner:
+            last_winner = winner
+            cards.remove(last_winner['card'])
+        else:
+            break
+
+    print(f'last winner: {last_winner}')
     return
 
 
 if __name__ == "__main__":
     part1()
     # 69579
-    # part2()
-    #
+    part2()
+    # 14877
