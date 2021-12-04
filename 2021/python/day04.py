@@ -45,7 +45,7 @@ def bingo_check(found_nums):
             return covered_rows
         if len(covered_cols) == 5:
             return covered_cols
-    return False
+    return None
 
 
 def play(hopper, cards):
