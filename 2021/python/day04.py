@@ -46,9 +46,7 @@ def bingo_check(found_nums):
     return False
 
 
-def part1():
-    hopper, cards = parse_lines()
-
+def play(hopper, cards):
     marked_nums = dict()
     for num in hopper:
         for card_idx, card in enumerate(cards):
@@ -64,8 +62,17 @@ def part1():
                         for col_idx, col in enumerate(row):
                             if [row_idx, col_idx] not in marked_nums[card_idx]:
                                 total += int(col)
-                    print(f'total: {total} * last num: {num} = {total * int(num)}')
-                    return
+                    return {'card_idx': card_idx,
+                            'total': total,
+                            'last_num': num,
+                            'product': total * int(num)}
+
+
+def part1():
+    hopper, cards = parse_lines()
+    winner = play(hopper, cards)
+    print(f'total: {winner["total"]} * last num: {winner["last_num"]} = {winner["product"]}')
+
     return
 
 
