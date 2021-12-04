@@ -2,10 +2,14 @@ with open("../input/day04.txt", "r") as fp:
     lines = [line.rstrip() for line in fp.readlines()]
 
 
-def parse_lines():
+def parse_lines(rows):
+    """
+    Given a list of rows, converts the first row to a list of number strings representing the numbers drawn from the
+    bingo hopper, and the rest to a list of lists of numbers that represent the bingo cards to be played.
+    """
     hopper = []
     cards = []
-    for row_idx, row in enumerate(lines):
+    for row_idx, row in enumerate(rows):
         if row_idx == 0:
             hopper = row.split(',')
             continue
@@ -73,14 +77,14 @@ def play(hopper, cards):
 
 
 def part1():
-    hopper, cards = parse_lines()
+    hopper, cards = parse_lines(lines)
     winner = play(hopper, cards)
     print(f'winner: {winner}')
     return
 
 
 def part2():
-    hopper, cards = parse_lines()
+    hopper, cards = parse_lines(lines)
     last_winner = None
     while True:
         winner = play(hopper, cards)
