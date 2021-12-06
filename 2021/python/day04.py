@@ -1,3 +1,5 @@
+import time
+
 with open("../input/day04.txt", "r") as fp:
     lines = [line.rstrip() for line in fp.readlines()]
 
@@ -98,8 +100,15 @@ def part2():
     return
 
 
+def with_perf_timing(fn):
+    start_time = time.perf_counter()
+    fn()
+    end_time = time.perf_counter()
+    print(f'Execution time: {end_time - start_time:0.6f}')
+
+
 if __name__ == "__main__":
-    part1()
+    with_perf_timing(part1)
     # 69579
-    part2()
+    with_perf_timing(part2)
     # 14877
