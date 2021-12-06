@@ -25,13 +25,21 @@ def population_growth(initial_population, days):
 def part1():
     initial_population = line
     grown_population = population_growth(initial_population, 80)
-    print(f'population count: {len(grown_population)}')
+    print(f'population count after 80 days: {len(grown_population)}')
+
+    return
+
+
+def part2():
+    initial_population = line
+    grown_population = population_growth(initial_population, 256)
+    print(f'population count after 256 days: {len(grown_population)}')
 
     return
 
 
 if __name__ == "__main__":
-    with_perf_timing(part1)
-    #
-    # with_perf_timing(part2)
+    # with_perf_timing(part1)
+    # 372984
+    with_perf_timing(part2)
     #
