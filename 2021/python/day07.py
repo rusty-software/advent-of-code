@@ -25,11 +25,25 @@ def part1():
 
 
 def part2():
+    # naive is still good enough; cost is a nth triangle number calculation
+    all_positions = range(min(positions) + 1, max(positions))
+    # unpacking for combination
+    combined_positions = [*positions, *all_positions]
+    combined_positions.sort()
+    diffs = []
+    for i, iv in enumerate(combined_positions):
+        diffs.append(0)
+        for j, jv in enumerate(positions):
+            diff = abs(iv - jv)
+            cost = diff * (diff + 1) // 2
+            diffs[i] += cost
+
+    print(f'min(diffs): {min(diffs)}')
     return
 
 
 if __name__ == "__main__":
     with_perf_timing(part1)
-    #
+    # 347011
     with_perf_timing(part2)
-    #
+    # 98363777
