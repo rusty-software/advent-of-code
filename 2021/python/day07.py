@@ -12,6 +12,15 @@ def with_perf_timing(fn):
 
 
 def part1():
+    # naive approach is good enough
+    positions.sort()
+    diffs = []
+    for i, _ in enumerate(positions):
+        diffs.append(0)
+        for j, _ in enumerate(positions):
+            diffs[i] += abs(positions[i] - positions[j])
+
+    print(f'min(diffs): {min(diffs)}')
     return
 
 
