@@ -22,33 +22,52 @@ def part1():
 
 
 def part2():
-    known_len_to_digit = dict()
-    known_len_to_digit[2] = '1'
-    known_len_to_digit[3] = '7'
-    known_len_to_digit[4] = '4'
-    known_len_to_digit[7] = '8'
+    digit_positions = {0: {'u', 'ul', 'ur', 'll', 'lr', 'l'},
+                       1: {'ur', 'lr'},
+                       2: {'u', 'ur', 'm', 'll', 'l'},
+                       3: {'u', 'ur', 'm', 'lr', 'l'},
+                       4: {'ul', 'ur', 'm', 'lr'},
+                       5: {'u', 'ul', 'm', 'lr', 'l'},
+                       6: {'u', 'ul', 'm', 'll', 'lr', 'l'},
+                       7: {'u', 'ur', 'lr'},
+                       8: {'u', 'ul', 'ur', 'm', 'll', 'lr', 'l'},
+                       9: {'u', 'ul', 'ur', 'm', 'lr', 'l'}}
+
+    segment_position = dict()
+    for segment in ['a', 'b', 'c', 'd', 'e', 'f', 'g']:
+        segment_position[segment] = {'positions': set(),
+                                     'cur_length': 0}
 
     line = 'acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf'
-    scrambled_digits = [s for s in line.split(' ')]
+    print(line)
+
+    digit_segments = [s for s in line.split(' ')][:-5]
+    # output_values = [s for s in line.split(' ')][-4:]
+    for digit_segment in digit_segments:
+        segment_len = len(digit_segment)
+        if segment_len == 2:
+            for segment in digit_segment:
+                if len(segment_position[segment]) != 1:
+                    segment_position[segment] = digit_positions[1].copy()
+        elif segment_len == 3:
+            for segment in digit_segment:
+                if len(segment_position[segment]) != 1:
+                    segment_position[segment] = digit_positions[7].copy()
+        # elif segment_len == 4:
+        #     for segment in digit_segment:
+        #         segment_position[segment] = digit_positions[4].copy()
+        # elif segment_len == 7:
+        #     for segment in digit_segment:
+        #         segment_position[segment] = digit_positions[8].copy()
+    print(f'segment position: {segment_position}')
+
+    for segment, positions in segment_position.items():
 
     return
 
 
-# for line in lines:
-#     outputs = [s for s in line.split(' ')[-4:]]
-#     print(outputs)
-#     digits = ''
-#     for output in outputs:
-#         if len(output) in known_len_to_digit:
-#             digits += known_len_to_digit[len(output)]
-#         else:
-#             digits += '?'
-#
-#     print(f'digits: {digits}')
-
-
 if __name__ == "__main__":
-    with_perf_timing(part1)
+    # with_perf_timing(part1)
     # 534
     with_perf_timing(part2)
     #
