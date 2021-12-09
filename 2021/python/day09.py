@@ -42,7 +42,22 @@ def part1():
     return
 
 
+def basin_for(point, grid):
+    basin = []
+    point_x = point[0]
+    point_y = point[1]
+    point_val = grid[point_x][point_y]
+
+    print(f'grid[{point_x}][{point_y}] is {point_val} and has adjacencies {adjacent_to(point_x, point_y, grid)}')
+    return basin
+
+
 def part2():
+    lows = low_points(heightmap)
+    basins = []
+    for low_point, low in lows.items():
+        basin = basin_for(low_point, heightmap)
+        # print(f'{low} at {low_point} surrounded by {basin}')
     return
 
 
