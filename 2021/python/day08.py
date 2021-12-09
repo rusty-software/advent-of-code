@@ -1,6 +1,6 @@
 import time
 
-with open("../input/day08_sample.txt", "r") as fp:
+with open("../input/day08.txt", "r") as fp:
     lines = [line.rstrip() for line in fp.readlines()]
 
 
@@ -21,48 +21,81 @@ def part1():
     return
 
 
-def part2():
-    digit_positions = {0: {'u', 'ul', 'ur', 'll', 'lr', 'l'},
-                       1: {'ur', 'lr'},
-                       2: {'u', 'ur', 'm', 'll', 'l'},
-                       3: {'u', 'ur', 'm', 'lr', 'l'},
-                       4: {'ul', 'ur', 'm', 'lr'},
-                       5: {'u', 'ul', 'm', 'lr', 'l'},
-                       6: {'u', 'ul', 'm', 'll', 'lr', 'l'},
-                       7: {'u', 'ur', 'lr'},
-                       8: {'u', 'ul', 'ur', 'm', 'll', 'lr', 'l'},
-                       9: {'u', 'ul', 'ur', 'm', 'lr', 'l'}}
-
-    segment_position = dict()
-    for segment in ['a', 'b', 'c', 'd', 'e', 'f', 'g']:
-        segment_position[segment] = {'positions': set(),
-                                     'cur_length': 0}
-
-    line = 'acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf'
-    print(line)
-
+def what_a_mess(line):
     digit_segments = [s for s in line.split(' ')][:-5]
-    # output_values = [s for s in line.split(' ')][-4:]
-    for digit_segment in digit_segments:
-        segment_len = len(digit_segment)
-        if segment_len == 2:
-            for segment in digit_segment:
-                if len(segment_position[segment]) != 1:
-                    segment_position[segment] = digit_positions[1].copy()
-        elif segment_len == 3:
-            for segment in digit_segment:
-                if len(segment_position[segment]) != 1:
-                    segment_position[segment] = digit_positions[7].copy()
-        # elif segment_len == 4:
-        #     for segment in digit_segment:
-        #         segment_position[segment] = digit_positions[4].copy()
-        # elif segment_len == 7:
-        #     for segment in digit_segment:
-        #         segment_position[segment] = digit_positions[8].copy()
-    print(f'segment position: {segment_position}')
+    output_values = [set(s) for s in line.split(' ')][-4:]
+    one_digital = set([s for s in digit_segments if len(s) == 2][0])
+    four_digital = set([s for s in digit_segments if len(s) == 4][0])
+    seven_digital = set([s for s in digit_segments if len(s) == 3][0])
+    eight_digital = set([s for s in digit_segments if len(s) == 7][0])
 
-    for segment, positions in segment_position.items():
+    digitals = dict()
+    digitals['1'] = one_digital
+    digitals['4'] = four_digital
+    digitals['7'] = seven_digital
+    digitals['8'] = eight_digital
 
+    u_segment = list(seven_digital.difference(one_digital))[0]
+    six_len_segments = [set(s) for s in digit_segments if len(s) == 6]
+    almost_nine = four_digital.copy()
+    almost_nine.add(u_segment)
+    l_segment = ''
+    ll_segment = ''
+    for segment in six_len_segments:
+        d = segment.difference(almost_nine)
+        if len(d) == 1:
+            digitals['9'] = segment
+            l_segment = list(d)[0]
+            ll_segment = list(eight_digital.difference(segment))[0]
+
+    almost_three = one_digital.copy()
+    almost_three.update([u_segment, l_segment])
+    five_len_segments = [set(s) for s in digit_segments if len(s) == 5]
+    m_segment = ''
+    for segment in five_len_segments:
+        d = segment.difference(almost_three)
+        if len(d) == 1:
+            digitals['3'] = segment
+            m_segment = list(d)[0]
+
+    almost_zero = one_digital.copy()
+    almost_zero.update([u_segment, l_segment, ll_segment])
+    ul_segment = ''
+    for segment in six_len_segments:
+        if segment in digitals.values():
+            continue
+
+        d = segment.difference(almost_zero)
+        if len(d) == 1:
+            digitals['0'] = segment
+            ul_segment = list(d)[0]
+        else:
+            digitals['6'] = segment
+
+    almost_five = {u_segment, ul_segment, m_segment, l_segment}
+    for segment in five_len_segments:
+        if segment in digitals.values():
+            continue
+
+        d = segment.difference(almost_five)
+        if len(d) == 1:
+            digitals['5'] = segment
+        else:
+            digitals['2'] = segment
+
+    num = ''
+    for output_value in output_values:
+        num += [k for k, v in digitals.items() if v == output_value][0]
+
+    return num
+
+
+def part2():
+    output_num_sum = 0
+    for line in lines:
+        output_num_sum += int(what_a_mess(line))
+
+    print(f'line output num sum: {output_num_sum}')
     return
 
 
