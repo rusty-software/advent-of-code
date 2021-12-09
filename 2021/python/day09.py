@@ -1,6 +1,6 @@
 import time
 
-with open("../input/day09.txt", "r") as fp:
+with open("../input/day09_sample.txt", "r") as fp:
     heightmap = [list(int(i) for i in line.rstrip()) for line in fp.readlines()]
 
 
@@ -12,7 +12,7 @@ def with_perf_timing(fn):
 
 
 def adjacent_to(row_idx, col_idx, grid):
-    neighbors = []
+    adjacent_points = []
     for r in [row_idx - 1, row_idx, row_idx + 1]:
         if r < 0 or r >= len(grid):
             continue
@@ -20,26 +20,34 @@ def adjacent_to(row_idx, col_idx, grid):
             if (c < 0 or c >= len(grid[row_idx])
                     or (r == row_idx and c == col_idx)):
                 continue
-            neighbors.append(grid[r][c])
+            adjacent_points.append(grid[r][c])
 
-    return neighbors
+    return adjacent_points
+
+
+def low_points(grid):
+    lows = dict()
+    for row_idx, row in enumerate(grid):
+        for col_idx, col in enumerate(row):
+            adjacent_points = adjacent_to(row_idx, col_idx, grid)
+            if col < min(adjacent_points):
+                lows[(row_idx, col_idx)] = col
+    return lows
 
 
 def part1():
-    low_points = []
-    for row_idx, row in enumerate(heightmap):
-        for col_idx, col in enumerate(row):
-            adjacents = adjacent_to(row_idx, col_idx, heightmap)
-            if col < min(adjacents):
-                low_points.append(col)
-
-    total = sum(low_points) + len(low_points)
+    lows = low_points(heightmap)
+    total = sum(lows.values()) + len(lows)
     print(f'sum of low points with increments of 1 is: {total}')
     return
 
 
+def part2():
+    return
+
+
 if __name__ == "__main__":
-    with_perf_timing(part1)
-    #
-    # with_perf_timing(part2)
+    # with_perf_timing(part1)
+    # 532
+    with_perf_timing(part2)
     #
