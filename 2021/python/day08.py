@@ -21,6 +21,25 @@ def part1():
     return
 
 
+#   0:      1:      2:      3:      4:
+#  aaaa    ....    aaaa    aaaa    ....
+# b    c  .    c  .    c  .    c  b    c
+# b    c  .    c  .    c  .    c  b    c
+#  ....    ....    dddd    dddd    dddd
+# e    f  .    f  e    .  .    f  .    f
+# e    f  .    f  e    .  .    f  .    f
+#  gggg    ....    gggg    gggg    ....
+#
+#   5:      6:      7:      8:      9:
+#  aaaa    aaaa    aaaa    aaaa    aaaa
+# b    .  b    .  .    c  b    c  b    c
+# b    .  b    .  .    c  b    c  b    c
+#  dddd    dddd    ....    dddd    dddd
+# .    f  e    f  .    f  e    f  .    f
+# .    f  e    f  .    f  e    f  .    f
+#  gggg    gggg    ....    gggg    gggg
+
+
 def what_a_mess(line):
     digit_segments = [s for s in line.split(' ')][:-5]
     output_values = [set(s) for s in line.split(' ')][-4:]
@@ -35,19 +54,27 @@ def what_a_mess(line):
     digitals['7'] = seven_digital
     digitals['8'] = eight_digital
 
+    # difference between the 7 and 1 digits upper segment
     u_segment = list(seven_digital.difference(one_digital))[0]
-    six_len_segments = [set(s) for s in digit_segments if len(s) == 6]
+
+    # find the 9 by taking the 4, adding the upper segment, and isolating the
+    # six-length segment with a single difference
     almost_nine = four_digital.copy()
     almost_nine.add(u_segment)
     l_segment = ''
     ll_segment = ''
+    six_len_segments = [set(s) for s in digit_segments if len(s) == 6]
     for segment in six_len_segments:
         d = segment.difference(almost_nine)
         if len(d) == 1:
             digitals['9'] = segment
+            # difference between (4 and upper) and 9 digit is lower segment
             l_segment = list(d)[0]
+            # extra bonus: difference between the 8 and 9 digits lower left segment
             ll_segment = list(eight_digital.difference(segment))[0]
 
+    # find the 3 by taking the one, adding the upper and lower segments, and
+    # isolating the five-length segment with a single difference
     almost_three = one_digital.copy()
     almost_three.update([u_segment, l_segment])
     five_len_segments = [set(s) for s in digit_segments if len(s) == 5]
@@ -56,8 +83,12 @@ def what_a_mess(line):
         d = segment.difference(almost_three)
         if len(d) == 1:
             digitals['3'] = segment
+            # difference between (1 and upper and lower) and 3 digit is middle segment
             m_segment = list(d)[0]
 
+    # find the 0 by taking the one, adding upper, lower, and lower left
+    # segments, and isolating the six-length segment with a single difference.
+    # The remaining six-length segment is the 6.
     almost_zero = one_digital.copy()
     almost_zero.update([u_segment, l_segment, ll_segment])
     ul_segment = ''
@@ -68,10 +99,14 @@ def what_a_mess(line):
         d = segment.difference(almost_zero)
         if len(d) == 1:
             digitals['0'] = segment
+            # difference between nearly zero and 0 is the upper left segment
             ul_segment = list(d)[0]
         else:
             digitals['6'] = segment
 
+    # find the 5 by combining an upper, upper left, middle, and lower segment,
+    # then isolating the five-length segment with a single difference. The
+    # remaining five-length segment is the 2.
     almost_five = {u_segment, ul_segment, m_segment, l_segment}
     for segment in five_len_segments:
         if segment in digitals.values():
@@ -103,4 +138,4 @@ if __name__ == "__main__":
     # with_perf_timing(part1)
     # 534
     with_perf_timing(part2)
-    #
+    # 1070188
