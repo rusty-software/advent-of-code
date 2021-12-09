@@ -10,8 +10,8 @@ def seats_adjacent_to(row_idx, seat_idx, seats):
         if r < 0 or r >= len(seats):
             continue
         for s in [seat_idx - 1, seat_idx, seat_idx + 1]:
-            if s < 0 or s >= len(seats[row_idx]) \
-                    or (r == row_idx and s == seat_idx):
+            if (s < 0 or s >= len(seats[row_idx])
+                    or (r == row_idx and s == seat_idx)):
                 continue
             neighbors.append(seats[r][s])
 
