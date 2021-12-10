@@ -1,8 +1,7 @@
 import time
 from collections import deque
-from pprint import pprint
 
-with open("../input/day10_sample.txt", "r") as fp:
+with open("../input/day10.txt", "r") as fp:
     lines = [list(i for i in line.rstrip()) for line in fp.readlines()]
 
 
@@ -27,17 +26,18 @@ point_values = {')': 3,
 
 
 def part1():
-    complete_lines = [line for line in lines if len(line) % 2 == 0]
-
-    for line in complete_lines:
+    error_score = 0
+    for line in lines:
         stack = deque()
-        for c in line:
+        for c in line[:-1]:
             if c in openers:
                 stack.append(c)
             else:
                 last_open = stack.pop()
                 if c != pairs[last_open]:
-                    print(f'found a mismatch: {last_open}, {c}')
+                    error_score += point_values[c]
+
+    print(f'Error score: {error_score}')
     return
 
 
