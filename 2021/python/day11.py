@@ -67,6 +67,7 @@ def reset_flashed(octopuses):
 
 
 def energize(energized_stats, octopuses):
+    energized_stats['step_count'] += 1
     energized_octopus_points = initial_energizing(octopuses)
     for energized_octopus_point in energized_octopus_points:
         energize_neighbors(energized_octopus_point, octopuses, energized_stats)
@@ -81,7 +82,8 @@ def part1():
     #          [1, 1, 1, 1, 1]]
 
     octopuses = initialize_octopuses(file_data)
-    energized_stats = {'flash_total': 0}
+    energized_stats = {'flash_total': 0,
+                       'step_count': 0}
     for i in range(100):
         energize(energized_stats, octopuses)
     print(energized_stats)
@@ -89,8 +91,27 @@ def part1():
     return
 
 
+def all_flashed(octopuses):
+    for octopus_point, octopus_data in octopuses.items():
+        if octopus_data['energy_level'] != 0:
+            return False
+    return True
+
+
+def part2():
+    octopuses = initialize_octopuses(file_data)
+    energized_stats = {'flash_total': 0,
+                       'step_count': 0}
+    while True:
+        energize(energized_stats, octopuses)
+        if all_flashed(octopuses):
+            break
+    print(energized_stats)
+    return
+
+
 if __name__ == "__main__":
     with_perf_timing(part1)
-    #
-    # with_perf_timing(part2)
-    #
+    # 1749
+    with_perf_timing(part2)
+    # 285
