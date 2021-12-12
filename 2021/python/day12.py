@@ -1,6 +1,7 @@
 import time
 from copy import deepcopy
 from collections import defaultdict
+from pprint import pprint
 
 with open("../input/day12.txt", "r") as fp:
     lines = [line.rstrip() for line in fp.readlines()]
@@ -119,13 +120,22 @@ def dfs(cave, visited, one_off, paths):
     if cave.islower():
         visited.add(cave)
 
-    total = sum([dfs(current_cave, visited, one_off, paths)
-                 for current_cave in paths[cave]
-                 if current_cave not in visited])
-    total += (sum([dfs(visited_cave, visited, visited_cave, paths)
-                  for visited_cave in paths[cave]
-                  if visited_cave in visited and visited_cave != 'start'])
-              if one_off == ' ' else 0)
+    total = 0
+    for connected_cave in paths[cave]:
+        if connected_cave not in visited:
+            total += dfs(connected_cave, visited, one_off, paths)
+
+    for connected_cave in paths[cave]:
+        if connected_cave in visited and connected_cave != 'start':
+            if one_off == ' ':
+                total += dfs(connected_cave, visited, connected_cave, paths)
+    # total = sum([dfs(current_cave, visited, one_off, paths)
+    #              for current_cave in paths[cave]
+    #              if current_cave not in visited])
+    # total += (sum([dfs(visited_cave, visited, visited_cave, paths)
+    #               for visited_cave in paths[cave]
+    #               if visited_cave in visited and visited_cave != 'start'])
+    #           if one_off == ' ' else 0)
 
     if cave != one_off:
         visited.discard(cave)
@@ -144,6 +154,7 @@ def aoc12_mockle2():
         paths[a].append(b)
         paths[b].append(a)
 
+    pprint(paths)
     print('Part 1:', dfs('start', set(), '', paths))
     print('Part 2:', dfs('start', set(), ' ', paths))
 
