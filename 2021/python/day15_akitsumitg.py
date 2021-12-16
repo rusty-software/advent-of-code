@@ -1,6 +1,6 @@
 from queue import PriorityQueue
 
-with open('../input/day15_sample.txt', 'r') as f:
+with open('../input/day15.txt', 'r') as f:
     matrix = [list(map(int, line)) for line in f.read().splitlines()]
 
 
@@ -43,7 +43,9 @@ def make_big_matrix():
 def doit():
     # https://github.com/ankitsumitg/advent_of_code/blob/main/2021/adventofcode-2021-15.py
     print(f'Part 1 : {solve_dis(matrix)}')
+    # 824
     print(f'Part 2 : {solve_dis(make_big_matrix())}')
+    # 3063
 
 
 if __name__ == "__main__":
