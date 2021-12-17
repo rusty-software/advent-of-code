@@ -71,10 +71,37 @@ def initial_assertions():
     return
 
 
+def process_literal_packet(literals, remaining_bits):
+    continuation_character_found = True
+    while continuation_character_found:
+        continuation_character, remaining_bits = bits_and_remaining(remaining_bits[0], remaining_bits)
+        # print(f'continuation: {continuation_character}, remaining: (length: {len(remaining_bits)}) {remaining_bits}')
+        continuation_character_found = int(continuation_character) == 1
+        # print(f'continuation character found? {continuation_character_found}')
+        literal, remaining_bits = bits_and_remaining(remaining_bits[:4], remaining_bits)
+        # print(f'appending {literal} to {literals}')
+        literals.append(literal)
+        if not continuation_character_found:
+            remaining_bits = ''
+    return remaining_bits
+
+
+def process_operator_packet(operators, remaining_bits):
+    length_type_id, remaining_bits = bits_to_int(remaining_bits[0], remaining_bits)
+    print(f'length_type_id: {length_type_id}, remaining_bits: (length {len(remaining_bits)}) {remaining_bits}')
+    end_idx = length_types.get(length_type_id)
+    print(f'end_idx: {end_idx}')
+    sub_packet, remaining_bits = bits_and_remaining(remaining_bits[:end_idx], remaining_bits)
+    print(f'sub_packet: {sub_packet}, remaining: {remaining_bits}')
+    remaining_bits = ''
+    return remaining_bits
+
+
 def part1():
     initial_assertions()
 
     literals = []
+    operators = []
     # python could probably do the translation for us, but let's do it ourselves, like santa intended
     # bits = hex_string_to_bits('D2FE28')
     bits = hex_string_to_bits('38006F45291200')
@@ -84,24 +111,12 @@ def part1():
     while len(remaining_bits) > 0:
         print(f'continuing to process: (length: {len(remaining_bits)}) {remaining_bits}')
         if type_id == packet_type_literal:
-            continuation_character_found = True
-            while continuation_character_found:
-                continuation_character, remaining_bits = bits_and_remaining(remaining_bits[0], remaining_bits)
-                # print(f'continuation: {continuation_character}, remaining: (length: {len(remaining_bits)}) {remaining_bits}')
-                continuation_character_found = int(continuation_character) == 1
-                # print(f'continuation character found? {continuation_character_found}')
-                literal, remaining_bits = bits_and_remaining(remaining_bits[:4], remaining_bits)
-                # print(f'appending {literal} to {literals}')
-                literals.append(literal)
-                if not continuation_character_found:
-                    remaining_bits = ''
+            remaining_bits = process_literal_packet(literals, remaining_bits)
         else:
-            # operator of some kind
-            length_type_id, remaining_bits = bits_and_remaining(bits[0], bits)
-            print(f'length_type_id:{length_type_id}')
-            remaining_bits = ''
+            remaining_bits = process_operator_packet(operators, remaining_bits)
 
-    print(f'literals:{literals}')
+    print(f'literals: {literals}')
+    print(f'operators: {operators}')
 
     # version, type_id = bits_to_int(bits[:3]), bits_to_int(bits[3:6])
     # if type_id != packet_type_literal:
